@@ -116,7 +116,7 @@ def main():
                 val_bar.desc = "valid epoch[{}/{}]".format(epoch + 1,
                                                            epochs)
 
-        val_accurate = acc / val_num
+        val_accurate = acc / len_test
         print('[epoch %d] train_loss: %.3f  val_accuracy: %.3f' %
               (epoch + 1, running_loss / train_steps, val_accurate))
 
