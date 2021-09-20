@@ -56,6 +56,7 @@ def main():
         print("Shape of y: ", y.shape, y.dtype)
         break
     net = resnet34()
+   # net.cuda()
     # # load pretrain weights
     # # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
     # model_weight_path = "./resnet34-pre.pth"
@@ -67,7 +68,7 @@ def main():
     # # change fc layer structure
     # in_channel = net.fc.in_features
     # net.fc = nn.Linear(in_channel, 100)
-    # net.to(device)
+    net.to(device)
 
     # define loss function
     loss_function = nn.CrossEntropyLoss()
