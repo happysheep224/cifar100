@@ -22,7 +22,7 @@ data_transform = {
                                    transforms.CenterCrop(224),
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
-training_data = datasets.CIFAR100(
+train_data = datasets.CIFAR100(
     root="data",
     train=True,
     download=True,
@@ -40,7 +40,7 @@ test_data = datasets.CIFAR100(
 batch_size = 128
 
 # Create data loaders.
-train_dataloader = DataLoader(training_data, batch_size=batch_size)
+train_dataloader = DataLoader(train_data, batch_size=batch_size)
 test_dataloader = DataLoader(test_data, batch_size=batch_size)
 
 for X, y in test_dataloader:
@@ -48,5 +48,9 @@ for X, y in test_dataloader:
     print("Shape of y: ", y.shape, y.dtype)
     break
 
+len_train = len(train_data)
+len_test = len(test_data)
+print("Length of train data: ",len_train)
+print("length of test data: ", len_test)
 if __name__ == '__main__':
     main()
