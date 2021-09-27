@@ -8,7 +8,7 @@ from torchvision import transforms, datasets
 from tqdm import tqdm
 import torchvision.models as models
 
-from model import resnet50
+from model import resnet34,resnet50,resnet101
 
 
 def main():
@@ -57,8 +57,10 @@ def main():
         print("Shape of y: ", y.shape, y.dtype)
         break
 
-    # model_weight_path = "./resnet34-pre.pth"
-    net = models.resnet18(pretrained=True)
+    model_weight_path = "./resNet34.pth"
+    net = resnet34()
+    assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
+    net.load_state_dict(torch.load(model_weight_path, map_location=device))
     # net.cuda()
     # # load pretrain weights
     # # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
@@ -69,10 +71,10 @@ def main():
     # #     param.requires_grad = False
     #
     # # change fc layer structure
-    # in_channel = net.fc.in_features
-    # net.fc = nn.Linear(in_channel, 100)
-    # net.to(device)#move to device
-    # print(net)
+    in_channel = net.fc.in_features
+    net.fc = nn.Linear(in_channel, 100)
+    net.to(device)#move to device
+    print(net)
     #
     # # define loss function
     # loss_function = nn.CrossEntropyLoss()
@@ -129,7 +131,7 @@ def main():
     #         torch.save(net.state_dict(), save_path)
     #
     # print('Finished Training')
-    #
+
 
 if __name__ == '__main__':
     main()
