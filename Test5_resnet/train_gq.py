@@ -75,10 +75,14 @@ def main():
     data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", transform=None)
 
     dataloader = DataLoader(data, batch_size=2, num_workers=4, shuffle=True)
-    for X, y in dataloader:
-        print("Shape of X [N, C, H, W]: ", X.shape)
-        print("Shape of y: ", y.shape, y.dtype)
-        break
+    # for X, y in dataloader:
+    #     print("Shape of X [N, C, H, W]: ", X.shape)
+    #     print("Shape of y: ", y.shape, y.dtype)
+    #     break
+    for i_batch, batch_data in enumerate(dataloader):
+        print(i_batch)  # 打印batch编号
+        print(batch_data['image'].size())  # 打印该batch里面图片的大小
+        print(batch_data['label'])  # 打印该batch里面图片的标签
     print("The data is loaded ! ")
     model_weight_path = "./resNet34.pth"
     net = resnet34()
