@@ -7,6 +7,7 @@ import torch.optim as optim
 from torchvision import transforms, datasets
 from tqdm import tqdm
 import torchvision.models as models
+from torch.utils.data import DataLoader, Dataset
 
 from model import resnet34,resnet50,resnet101
 
@@ -70,13 +71,14 @@ def main():
     # len_test = len(test_data)
     # print("using {} images for training, {} images for validation.".format(len_train,
     #                                                                        len_test))
-    # for X, y in test_loader:
-    #     print("Shape of X [N, C, H, W]: ", X.shape)
-    #     print("Shape of y: ", y.shape, y.dtype)
-    #     break
+
     data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", transform=None)
 
     dataloader = DataLoader(data, batch_size=2, num_workers=4, shuffle=True)
+    for X, y in dataloader:
+        print("Shape of X [N, C, H, W]: ", X.shape)
+        print("Shape of y: ", y.shape, y.dtype)
+        break
     print("The data is loaded ! ")
     model_weight_path = "./resNet34.pth"
     net = resnet34()
@@ -93,9 +95,10 @@ def main():
     #
     # # change fc layer structure
     in_channel = net.fc.in_features
-    net.fc = nn.Linear(in_channel, 100)
+    net.fc = nn.Linear(in_channel, 5)
     net.to(device)#move to device
     print(net)
+    print("The structure of net is ok ! ")
 
     # define loss function
     loss_function = nn.CrossEntropyLoss()
