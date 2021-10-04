@@ -61,7 +61,7 @@ def main():
     net = resnet34()
     assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
     net.load_state_dict(torch.load(model_weight_path, map_location=device))
-    net.cuda()
+    # net.cuda()
     # # load pretrain weights
     # # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
     # model_weight_path = "./resnet34-pre.pth"
@@ -83,7 +83,7 @@ def main():
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=0.0001)
 
-    epochs = 100
+    epochs = 3
     best_acc = 0.0
     save_path = './resNet34-final.pth'
     train_steps = len(train_loader)
@@ -130,6 +130,7 @@ def main():
             best_acc = val_accurate
             torch.save(net.state_dict(), save_path)
 
+    print('The best accuracy is %s', best_acc)
     print('Finished Training')
 
 
