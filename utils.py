@@ -7,6 +7,12 @@ import sys
 import re
 import datetime
 
+from scipy.io import loadmat, savemat
+from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms
+
+import numpy as np
+
 import numpy
 
 import torch
@@ -161,6 +167,46 @@ def get_network(args):
         net = net.cuda()
 
     return net
+
+
+
+def find_max_width_height(root_dir):
+    max_height = 0
+    max_width = 0
+
+    for dir in os.listdir(root_dir):
+        matrix = loadmat(os.path.join(root_dir, dir))["B"]
+
+        if matrix.shape[0] > max_width:
+            max_width = matrix.shape[0]
+        if matrix.shape[1] > max_height:
+            max_height = matrix.shape[1]
+        else:
+            continue
+
+    return max_width, max_height
+
+
+
+class GOU_QI_DATA(Dataset):
+    def __init__(self, root_dir, transform=None):
+        self.root_dir = root_dir
+        self.transform = transform
+        self.images = os.listdir(self.root_dir)
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, index):
+        image_index = self.images[index]
+        img_path = os.path.join(self.root_dir, image_index)
+        img = loadmat(img_path)["B"]
+        label = img_path.split("/")[-1].split("_")[0]   # 我将每个.mat文件名的GS当做类别label（你可以自行修改你原本的label)
+        sample = {"image": img, "label": label}
+
+        if self.transform:
+            sample = self.transform(sample)
+        return sample
 
 
 def get_training_dataloader(mean, std, batch_size=16, num_workers=2, shuffle=True):

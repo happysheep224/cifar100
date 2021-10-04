@@ -18,23 +18,28 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
+from scipy.io import loadmat, savemat
 
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 from conf import settings
-from utils import get_network, get_training_dataloader, get_test_dataloader, WarmUpLR, \
+from utils import get_network, GOU_QI_DATA, find_max_width_height, get_training_dataloader, get_test_dataloader, WarmUpLR, \
     most_recent_folder, most_recent_weights, last_epoch, best_acc_weights
+
+
+class_name_dict = {"GS": 0, "MG": 1, "NX": 2, "QH": 3, "XJ": 4}
+
 
 def train(epoch):
 
     start = time.time()
     net.train()
-    for batch_index, (images, labels) in enumerate(cifar100_training_loader):
+    for batch_index, batch_data in enumerate(dataloader):
 
         if args.gpu:
-            labels = labels.cuda()
-            images = images.cuda()
+            labels = torch.from_numpy(np.array(class_name_dict[batch_data["label"][0]])).cuda()
+            images = torch.from_numpy(np.array(batch_data["image"]).transpose(0, 3, 1, 2)).cuda()
 
         optimizer.zero_grad()
         outputs = net(images)
@@ -42,7 +47,7 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        n_iter = (epoch - 1) * len(cifar100_training_loader) + batch_index + 1
+        n_iter = (epoch - 1) * len(dataloader) + batch_index + 1
 
         last_layer = list(net.children())[-1]
         for name, para in last_layer.named_parameters():
@@ -56,7 +61,7 @@ def train(epoch):
             optimizer.param_groups[0]['lr'],
             epoch=epoch,
             trained_samples=batch_index * args.b + len(images),
-            total_samples=len(cifar100_training_loader.dataset)
+            total_samples=len(dataloader.dataset)
         ))
 
         #update training loss for each iteration
@@ -119,17 +124,39 @@ def eval_training(epoch=0, tb=True):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-net', type=str, required=True, help='net type')
-    parser.add_argument('-gpu', action='store_true', default=False, help='use gpu or not')
+    parser.add_argument('-net', type=str,default="resnet152", required=True, help='net type')
+    parser.add_argument('-gpu', action='store_true', default=True, help='use gpu or not')
     parser.add_argument('-b', type=int, default=128, help='batch size for dataloader')
-    parser.add_argument('-warm', type=int, default=1, help='warm up training phase')
-    parser.add_argument('-lr', type=float, default=0.1, help='initial learning rate')
+    parser.add_argument('-warm', type=int, default=100, help='warm up training phase')
+    parser.add_argument('-lr', type=float, default=0.01, help='initial learning rate')
     parser.add_argument('-resume', action='store_true', default=False, help='resume training')
     args = parser.parse_args()
 
     net = get_network(args)
 
+
     #data preprocessing:
+    """
+    max_width, max_height = find_max_width_height('/bak4t/back8t/v1/yangdataset/large_dataset/GS/GS')
+    
+    os.makedirs("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data", exist_ok=True)
+
+    for path in os.listdir("/bak4t/back8t/v1/yangdataset/large_dataset/GS/GS"):
+        img = loadmat(os.path.join("/bak4t/back8t/v1/yangdataset/large_dataset/GS/GS/", path))["B"]
+    
+        zero_full = np.zeros((max_width, max_height, 728))
+        zero_full[: img.shape[0], : img.shape[1], : img.shape[2]] = img
+
+        savemat(os.path.join("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", path), {"B": zero_full})
+
+    """
+   
+    data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/",transform=None)
+
+    dataloader = DataLoader(data, batch_size=args.b, num_workers=4, shuffle=True)
+
+    
+    """
     cifar100_training_loader = get_training_dataloader(
         settings.CIFAR100_TRAIN_MEAN,
         settings.CIFAR100_TRAIN_STD,
@@ -145,11 +172,12 @@ if __name__ == '__main__':
         batch_size=args.b,
         shuffle=True
     )
+    """
 
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
     train_scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=settings.MILESTONES, gamma=0.2) #learning rate decay
-    iter_per_epoch = len(cifar100_training_loader)
+    iter_per_epoch = len(dataloader)
     warmup_scheduler = WarmUpLR(optimizer, iter_per_epoch * args.warm)
 
     if args.resume:
@@ -210,7 +238,7 @@ if __name__ == '__main__':
                 continue
 
         train(epoch)
-        acc = eval_training(epoch)
+        # acc = eval_training(epoch)
 
         #start to save best performance model after learning rate decay to 0.01
         if epoch > settings.MILESTONES[1] and best_acc < acc:
