@@ -89,10 +89,10 @@ if __name__ == '__main__':
             print(batch_data['image'].size())  # 打印该batch里面图片的大小
             print(batch_data['label'])  # 打印该batch里面图片的标签
         print("The data is loaded ! ")
-        model_weight_path = "./resNet34.pth"
+        # model_weight_path = "./resNet34.pth"
         net = resnet34(inputchannel=3)
-        assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
-        net.load_state_dict(torch.load(model_weight_path, map_location=device))
+        # assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
+        # net.load_state_dict(torch.load(model_weight_path, map_location=device))
         # net.cuda()
         # # load pretrain weights
         # # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
