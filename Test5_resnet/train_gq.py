@@ -79,7 +79,7 @@ if __name__ == '__main__':
         data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", transform=None)
         # data = GOU_QI_DATA('./new_data/', transform=None)
 
-        dataloader = DataLoader(data, batch_size=2, num_workers=4, shuffle=True)
+        dataloader = DataLoader(data, batch_size=64, num_workers=4, shuffle=True)
         # for X, y in dataloader:
         #     print("Shape of X [N, C, H, W]: ", X.shape)
         #     print("Shape of y: ", y.shape, y.dtype)
@@ -90,7 +90,7 @@ if __name__ == '__main__':
             print(batch_data['label'])  # 打印该batch里面图片的标签
         print("The data is loaded ! ")
         # model_weight_path = "./resNet34.pth"
-        net = resnet34(inputchannel=3)
+        net = resnet34()
         # assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
         # net.load_state_dict(torch.load(model_weight_path, map_location=device))
         # net.cuda()
