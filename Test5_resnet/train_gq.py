@@ -10,6 +10,7 @@ import torchvision.models as models
 from torch.utils.data import DataLoader, Dataset
 
 from model import resnet34,resnet50,resnet101
+from scipy.io import loadmat, savemat
 
 class GOU_QI_DATA(Dataset):
     def __init__(self, root_dir, transform=None):
