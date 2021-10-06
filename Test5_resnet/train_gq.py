@@ -84,10 +84,10 @@ if __name__ == '__main__':
         #     print("Shape of X [N, C, H, W]: ", X.shape)
         #     print("Shape of y: ", y.shape, y.dtype)
         #     break
-        for i_batch, batch_data in enumerate(dataloader):
-            print(i_batch)  # 打印batch编号
-            print(batch_data['image'].size())  # 打印该batch里面图片的大小
-            print(batch_data['label'])  # 打印该batch里面图片的标签
+        #for i_batch, batch_data in enumerate(dataloader):
+        #    print(i_batch)  # 打印batch编号
+        #    print(batch_data['image'].size())  # 打印该batch里面图片的大小
+        #    print(batch_data['label'])  # 打印该batch里面图片的标签
         print("The data is loaded ! ")
         # model_weight_path = "./resNet34.pth"
         net = resnet34(num_classes=1, inputchannel=728)
@@ -130,8 +130,10 @@ if __name__ == '__main__':
                 # images, labels = data
                 labels = torch.from_numpy(np.array(class_name_dict[data["label"][0]])).cuda()
                 images = torch.from_numpy(np.array(data["image"]).transpose(0, 3, 1, 2)).cuda()
+                images = images.float()
                 optimizer.zero_grad()
                 logits = net(images.to(device))
+                print(labels.size(),labels.type())
                 loss = loss_function(logits, labels.to(device))
                 loss.backward()
                 optimizer.step()
