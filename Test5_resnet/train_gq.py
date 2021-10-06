@@ -1,6 +1,6 @@
 import os
 import json
-
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader, Dataset
 
 from model import resnet34,resnet50,resnet101
 from scipy.io import loadmat, savemat
+
 
 class GOU_QI_DATA(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -36,7 +37,7 @@ class GOU_QI_DATA(Dataset):
 if __name__ == '__main__':
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         print("using {} device.".format(device))
-
+        class_name_dict = {"GS": 0, "MG": 1, "NX": 2, "QH": 3, "XJ": 4}
         # data_transform = {
         #     "train": transforms.Compose([transforms.RandomResizedCrop(224),
         #                                  transforms.RandomHorizontalFlip(),
@@ -76,6 +77,7 @@ if __name__ == '__main__':
         #                                                                        len_test))
 
         data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", transform=None)
+        # data = GOU_QI_DATA('./new_data/', transform=None)
 
         dataloader = DataLoader(data, batch_size=2, num_workers=4, shuffle=True)
         # for X, y in dataloader:
@@ -105,7 +107,6 @@ if __name__ == '__main__':
         net.fc = nn.Linear(in_channel, 5)
         net.conv1.in_channels = 728
         net.to(device)  # move to device
-        device = "gpu"
         print(net)
         print("The structure of net is ok ! ")
 
@@ -126,10 +127,11 @@ if __name__ == '__main__':
             running_loss = 0.0
             train_bar = tqdm(dataloader)
             for step, data in enumerate(train_bar):
-                images, labels = data
+                # images, labels = data
+                labels = torch.from_numpy(np.array(class_name_dict[data["label"][0]])).cuda()
+                images = torch.from_numpy(np.array(data["image"]).transpose(0, 3, 1, 2)).cuda()
                 optimizer.zero_grad()
                 logits = net(images.to(device))
-                # logits = net(images)
                 loss = loss_function(logits, labels.to(device))
                 loss.backward()
                 optimizer.step()
