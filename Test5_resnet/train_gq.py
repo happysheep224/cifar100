@@ -103,6 +103,7 @@ if __name__ == '__main__':
         # # change fc layer structure
         in_channel = net.fc.in_features
         net.fc = nn.Linear(in_channel, 5)
+        net.conv1.in_channels = 728
         net.to(device)  # move to device
         print(net)
         print("The structure of net is ok ! ")
