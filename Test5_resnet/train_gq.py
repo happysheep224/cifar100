@@ -126,7 +126,8 @@ if __name__ == '__main__':
             for step, data in enumerate(train_bar):
                 images, labels = data
                 optimizer.zero_grad()
-                logits = net(images.to(device))
+                # logits = net(images.to(device))
+                logits = net(images)
                 loss = loss_function(logits, labels.to(device))
                 loss.backward()
                 optimizer.step()
