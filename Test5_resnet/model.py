@@ -90,7 +90,7 @@ class ResNet(nn.Module):
     def __init__(self,
                  block,
                  blocks_num,
-                 inputchannel=3
+                 inputchannel=3,
                  num_classes=100,
                  include_top=True,
                  groups=1,
