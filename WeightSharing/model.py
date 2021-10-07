@@ -162,7 +162,7 @@ class ResNet(nn.Module):
         return x
 
 
-def resnet34(num_classes, inputchannel = 728, include_top=True):
+def resnet34(num_classes, inputchannel = 3, include_top=True):
     # https://download.pytorch.org/models/resnet34-333f7ec4.pth
     return ResNet(BasicBlock, [3, 4, 6, 3], num_classes=num_classes, inputchannel=inputchannel, include_top=include_top)
 
