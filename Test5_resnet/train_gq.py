@@ -37,53 +37,11 @@ class GOU_QI_DATA(Dataset):
 if __name__ == '__main__':
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         print("using {} device.".format(device))
-        class_name_dict = {"GS": 0, "MG": 1, "NX": 2, "QH": 3, "XJ": 4}
-        # data_transform = {
-        #     "train": transforms.Compose([transforms.RandomResizedCrop(224),
-        #                                  transforms.RandomHorizontalFlip(),
-        #                                  transforms.ToTensor(),
-        #                                  transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])]),
-        #     "val": transforms.Compose([transforms.Resize(256),
-        #                                transforms.CenterCrop(224),
-        #                                transforms.ToTensor(),
-        #                                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
-        #
-        # train_data = datasets.CIFAR100(
-        #     root="data",
-        #     train=True,
-        #     download=True,
-        #     transform=data_transform["train"],
-        # )
-        #
-        # # Download test data from open datasets.
-        # test_data = datasets.CIFAR100(
-        #     root="data",
-        #     train=False,
-        #     download=True,
-        #     transform=data_transform["val"],
-        # )
-        # batch_size = 64
-        #
-        # train_loader = torch.utils.data.DataLoader(train_data,
-        #                                            batch_size=batch_size, shuffle=True,num_workers=4
-        #                                            )
-        #
-        # test_loader = torch.utils.data.DataLoader(test_data,
-        #                                               batch_size=batch_size, shuffle=False,num_workers=4
-        #                                             )
-        # len_train = len(train_data)
-        # len_test = len(test_data)
-        # print("using {} images for training, {} images for validation.".format(len_train,
-        #                                                                        len_test))
-
+        class_name_dict = {"GS": 0, "MG": 1, "NX": 2, "QH": 3, "XJ": 4}                                              len_test))
         data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", transform=None)
         # data = GOU_QI_DATA('./new_data/', transform=None)
 
         dataloader = DataLoader(data, batch_size=64, num_workers=4, shuffle=True)
-        # for X, y in dataloader:
-        #     print("Shape of X [N, C, H, W]: ", X.shape)
-        #     print("Shape of y: ", y.shape, y.dtype)
-        #     break
         #for i_batch, batch_data in enumerate(dataloader):
         #    print(i_batch)  # 打印batch编号
         #    print(batch_data['image'].size())  # 打印该batch里面图片的大小
@@ -94,14 +52,6 @@ if __name__ == '__main__':
         # assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
         # net.load_state_dict(torch.load(model_weight_path, map_location=device))
         # net.cuda()
-        # # load pretrain weights
-        # # download url: https://download.pytorch.org/models/resnet34-333f7ec4.pth
-        # model_weight_path = "./resnet34-pre.pth"
-        # assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
-        # net.load_state_dict(torch.load(model_weight_path, map_location=device))
-        # # for param in net.parameters():
-        # #     param.requires_grad = False
-        #
         # # change fc layer structure
         in_channel = net.fc.in_features
         net.fc = nn.Linear(in_channel, 5)
