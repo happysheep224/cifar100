@@ -25,7 +25,7 @@ def main():
                                    transforms.ToTensor(),
                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])}
 
-    train_data = datasets.CIFAR100(
+    train_data = datasets.CIFAR10(
         root="data",
         train=True,
         download=True,
@@ -33,7 +33,7 @@ def main():
     )
 
     # Download test data from open datasets.
-    test_data = datasets.CIFAR100(
+    test_data = datasets.CIFAR10(
         root="data",
         train=False,
         download=True,
@@ -72,7 +72,7 @@ def main():
     #
     # # change fc layer structure
     in_channel = net.fc.in_features
-    net.fc = nn.Linear(in_channel, 100)
+    net.fc = nn.Linear(in_channel, 10)
     net.to(device)#move to device
     print(net)
 
