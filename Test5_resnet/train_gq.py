@@ -37,7 +37,7 @@ class GOU_QI_DATA(Dataset):
 if __name__ == '__main__':
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         print("using {} device.".format(device))
-        class_name_dict = {"GS": 0, "MG": 1, "NX": 2, "QH": 3, "XJ": 4}                                              len_test))
+        class_name_dict = {"GS": 0, "MG": 1, "NX": 2, "QH": 3, "XJ": 4}
         data = GOU_QI_DATA("/bak4t/back8t/v1/yangdataset/large_dataset/GS/new_data/", transform=None)
         # data = GOU_QI_DATA('./new_data/', transform=None)
 
