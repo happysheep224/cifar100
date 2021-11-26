@@ -1,0 +1,5 @@
+{
+    "param": "0.27M",
+    "flops": "40.6M",
+    "config": "{'name': 'ResNet_CIFAR', 'cfg': [16, 16, 16, 32, 32, 32, 64, 64, 64], 'cfg_base': [16, 16, 16, 32, 32, 32, 64, 64, 64], 'dataset': 'cifar10'}"
+}
