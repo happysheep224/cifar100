@@ -115,10 +115,10 @@ if __name__ == '__main__':
                 optimizer.step()
                 # print statistics
                 running_loss += loss.item()
-
-                train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,
-                                                                         epochs,
-                            	                                         loss)
+                train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,epochs,loss)
+                _,id = torch.max(logits.data,1)
+                running_acc += torch.sum(id==labels.data)
+            print('Train accuracy: {}'.format(running_acc/train_steps))
             # validate
             net.eval()
             acc = 0.0  # accumulate accurate number / epoch
