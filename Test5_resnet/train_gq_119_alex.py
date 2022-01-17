@@ -85,7 +85,7 @@ if __name__ == '__main__':
         net.load_state_dict(model_dict)
 """
         
-	print(net)
+	    print(net)
         print("The structure of net is ok ! ")
 
         # define loss function
