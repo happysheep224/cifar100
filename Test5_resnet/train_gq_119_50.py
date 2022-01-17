@@ -119,6 +119,8 @@ if __name__ == '__main__':
                 _,id = torch.max(logits.data,1)
                 running_acc += torch.sum(id==labels.data)
             print('Train accuracy: {}'.format(running_acc/train_steps))
+            print(running_acc)
+            print(train_steps)
             # validate
             net.eval()
             acc = 0.0  # accumulate accurate number / epoch
