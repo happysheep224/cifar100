@@ -118,9 +118,9 @@ if __name__ == '__main__':
                 train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,epochs,loss)
                 predict_yt = torch.max(logits, dim=1)[1]
                 running_acc += torch.eq(predict_yt, labels.to(device)).sum().item()
-            print('Train accuracy: {}'.format(running_acc/train_steps))
+            print('Train accuracy: {}'.format(running_acc/len(train_data)))
             print(running_acc)
-            print(train_steps)
+            print(len(train_data))
             # validate
             net.eval()
             acc = 0.0  # accumulate accurate number / epoch
@@ -136,11 +136,11 @@ if __name__ == '__main__':
                     val_bar.desc = "valid epoch[{}/{}]".format(epoch + 1,
                                                                epochs)
 
-            val_accurate = acc / len(test_loader)
+            val_accurate = acc / len(test_data)
             print('[epoch %d] train_loss: %.3f val_accuracy: %.3f' %
                   (epoch + 1, running_loss / train_steps, val_accurate))
             print(acc)
-            print(len(test_loader))
+            print(len(test_data))
 
             if val_accurate > best_acc:
                 best_acc = val_accurate
