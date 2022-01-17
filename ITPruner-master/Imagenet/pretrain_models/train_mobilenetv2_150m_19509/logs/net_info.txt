@@ -1,0 +1,5 @@
+{
+    "param": "2.37M",
+    "flops": "148.7M",
+    "config": "{'name': 'MobileNetV2', 'cfg': [29, 12, 16, 24, 43, 50, 98, 273], 'cfg_base': [32, 16, 24, 32, 64, 96, 160, 320], 'dataset': 'ImageNet'}"
+}
