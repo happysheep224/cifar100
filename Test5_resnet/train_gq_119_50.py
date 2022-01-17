@@ -139,6 +139,8 @@ if __name__ == '__main__':
             val_accurate = acc / len(test_loader)
             print('[epoch %d] train_loss: %.3f val_accuracy: %.3f' %
                   (epoch + 1, running_loss / train_steps, val_accurate))
+            print(acc)
+            print(len(test_loader))
 
             if val_accurate > best_acc:
                 best_acc = val_accurate
