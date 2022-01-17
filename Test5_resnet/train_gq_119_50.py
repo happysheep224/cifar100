@@ -116,8 +116,8 @@ if __name__ == '__main__':
                 # print statistics
                 running_loss += loss.item()
                 train_bar.desc = "train epoch[{}/{}] loss:{:.3f}".format(epoch + 1,epochs,loss)
-                _,id = torch.max(logits.data,1)
-                running_acc += torch.sum(id==labels.data)
+                predict_yt = torch.max(logits, dim=1)[1]
+                running_acc += torch.eq(predict_yt, labels.to(device)).sum().item()
             print('Train accuracy: {}'.format(running_acc/train_steps))
             print(running_acc)
             print(train_steps)
