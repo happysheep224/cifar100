@@ -101,6 +101,7 @@ if __name__ == '__main__':
             # train
             net.train()
             running_loss = 0.0
+            running_acc = 0
             train_bar = tqdm(train_loader)
             for step, data in enumerate(train_bar):
                 images, labels = data
